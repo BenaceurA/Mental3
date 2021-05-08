@@ -37,7 +37,7 @@ namespace Mental3
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            map = Map.import("map", Content);
+            map = new Map("map", Content);
             player = new Player(map, Content);
             // TODO: use this.Content to load your game content here
         }
