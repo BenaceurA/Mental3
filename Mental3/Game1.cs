@@ -12,24 +12,23 @@ namespace Mental3
         Player player;
         public static Vector2 gameScaleRatio;
         public static Vector2 gameNativeResolution;
+        private RenderTarget2D _nativeRenderTarget;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
+
         }
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            Window.IsBorderless = true;
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
             _graphics.ApplyChanges();
-            _graphics.ToggleFullScreen();
-            gameNativeResolution = new Vector2(512.0f, 288.0f);
-            gameScaleRatio = new Vector2((float)_graphics.PreferredBackBufferWidth / gameNativeResolution.X,
-                (float)_graphics.PreferredBackBufferHeight / gameNativeResolution.Y);
+            _nativeRenderTarget = new RenderTarget2D(GraphicsDevice, 512, 288);
 
             base.Initialize();
         }
@@ -54,10 +53,17 @@ namespace Mental3
 
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.SetRenderTarget(_nativeRenderTarget);
             GraphicsDevice.Clear(Color.Black);
-            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);          
+            _spriteBatch.Begin();          
             map.draw(_spriteBatch);
             player.draw(_spriteBatch);
+            _spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+            GraphicsDevice.Clear(Color.Black);
+            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+            _spriteBatch.Draw(_nativeRenderTarget,new Rectangle(0,0,_graphics.PreferredBackBufferWidth,_graphics.PreferredBackBufferHeight),Color.White);
             _spriteBatch.End();
             base.Draw(gameTime);
         }

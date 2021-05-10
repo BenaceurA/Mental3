@@ -16,10 +16,10 @@ namespace Mental3
         public struct tile
         {
             public int id;
-            public List<properties> properties;
+            public List<property> properties;
         }
 
-        public struct properties
+        public struct property
         {
             public string name;
             public string type;
@@ -49,6 +49,32 @@ namespace Mental3
             t = JsonConvert.DeserializeObject<TileSet>(s);
             t.texture = content.Load<Texture2D>(t.image);
             return t;
+        }
+
+        public bool doesTileHaveProperty(int tile_index,string propertyName)
+        {
+            foreach (var property in tiles[tile_index].properties)
+            {
+                if (property.name == propertyName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public dynamic getTileProperty(int id,string propertyName)
+        {
+            //Debug.WriteLine(id);
+            
+                foreach (var property in tiles[id].properties)
+                {
+                    if (property.name == propertyName)
+                    {
+                        return property.value;
+                    }
+                }
+            return null;
         }
     }
 }
